@@ -1,0 +1,5 @@
+{
+  "watch": ["api-gen", "api-gen/**/*","api-gen/*","tests"],
+  "ext": "ts",
+  "exec": "node api-gen"
+}
