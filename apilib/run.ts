@@ -15,7 +15,7 @@ export const initApiInstance = (accessToken?) => {
     'accept': 'text/plain'
   }
   if (accessToken) {
-    headers['Authorization-Vbtc'] = accessToken
+    headers['Authorization'] = accessToken
     ws.connect(baseURL, accessToken)
   }
 
