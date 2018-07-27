@@ -1,99 +1,62 @@
 import {writeModules} from "./write-module";
 import {writeDefinitions} from "./write-definitions";
+import {Action} from "./Action";
 
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
-//TODO add swagger.json url here
-let swaggerJsonUrl = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/json/uber.json";
-
-https.get(swaggerJsonUrl, (resp) => {
-  let data = "";
-  resp.on("data", (chunk) => data += chunk);
-  resp.on("end", () => gen(JSON.parse(data)));
-}).on("error", (err) => {
-  console.log("Error: " + err.message);
-});
 
 let headersTypes: string[] = [];
 
+const yaml = require('js-yaml');
+
+
+// Get document, or throw exception on error
+try {
+  var doc = yaml.safeLoad(fs.readFileSync('./api.yaml', 'utf8'));
+  //console.log(doc);
+  gen(doc)
+} catch (e) {
+  console.log(e);
+}
+
+//
 function gen(data) {
-  let modules = {};
-  let definitions = {};
-  let sh = {
-    definitions
-  };
+  writeDefinitions(data.definitions);
 
-  Object.keys(data.definitions).forEach(k => {
-    definitions[k] = data.definitions[k]
-  });
-
-
-  Object.keys(data.paths).forEach(p => {
-    let moduleName, actionName, arp = p.split('/')
-    if (arp.length > 2) {
-    //   moduleName = arp[1]
-    //   actionName = arp.slice(2)
-    // } else {
-    //   moduleName = ''
-    }
-
-    //DODO write code here
-    console.log(arp)
-
-    // let v = data.paths[p]
-    // let method = Object.keys(v).reduce(x => x)
-    // let actionData = v[method]
-
-    // console.log(Object.keys(actionData.description))
-
-    // let [a0, a1, a2, moduleName, actionName] = p.split("/");
-    // console.log()
-    //
-    // module = modules[moduleName] = modules[moduleName] ? modules[moduleName] : {};
-    // let v = data.paths[p];
+  let actions = []
+  Object.keys(data.paths).forEach(path => {
+    let actionData = data.paths[path]
+    Object.keys(actionData).forEach(method => {
+      const actionObject = actionData[method]
+      let action = new Action()
+      action.path = path
+      if (actionObject.parameters)
+        actionObject.parameters.forEach(param=>{
+          switch (param.in) {
+            case 'header': break
+            case 'body' :
+              action.bodyParams.push(param)
+              break
+            case 'path' :
+              action.pathParams.push(param)
+              break
+            case 'query' :
+              action.queryParams.push(param)
+              break
+          }
+        })
+    })
 
 
-    // console.log(actionName)
 
-    // headers
-    // let h = actionData.consumes;
-    // let headersTypeId = -1;
-    // if (h.length >= 1) {
-    //   let headerString = v[method].consumes.toString();
-    //   headersTypeId = headersTypes.indexOf(headerString);
-    //   if (headersTypeId == -1) {
-    //     headersTypes.push(headerString);
-    //     headersTypeId = headersTypes.indexOf(headerString);
-    //   }
-    // }
 
-    // if (actionData.parameters) {
-    //
-    //   actionData.parameters.forEach(param => {
-    //     let schema = param.schema;
-    //     if (schema) {
-    //       param.type = schema.$ref.replace("#/definitions/", "");
-    //     } else {
-    //       if (param.format) {
-    //         // param.type = param.format
-    //         param.type = "number";
-    //       } else {
-    //         param.type = "string";
-    //       }
-    //     }
-    //   });
-    // }
-    // let action = module[actionName] = {
-    //   method,
-    //   params: actionData.parameters
-    // };
   });
 
 
   // writeModules(modules);
 
-  writeDefinitions(definitions);
+  // console.log(definitions)
 
 }

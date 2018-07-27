@@ -1,8 +1,8 @@
 import 'url-search-params-polyfill'
-import {ws} from "../nuxt/api/ws";
+//import {ws} from "../nuxt/api/ws";
 
-const axios = require("axios")
-const qs = require("qs")
+//const axios = require("axios")
+//const qs = require("qs")
 
 
 let apiInstance
@@ -16,7 +16,7 @@ export const initApiInstance = (accessToken?) => {
   }
   if (accessToken) {
     headers['Authorization'] = accessToken
-    ws.connect(baseURL, accessToken)
+    // ws.connect(baseURL, accessToken)
   }
 
 
@@ -28,10 +28,10 @@ export const initApiInstance = (accessToken?) => {
     }
   }
 
-  apiInstance = axios.create({
-    baseURL: protocol + "//" + baseURL + "/api/fo/",
-    headers
-  })
+  // apiInstance = axios.create({
+  //   baseURL: protocol + "//" + baseURL + "/api/fo/",
+  //   headers
+  // })
 }
 
 
