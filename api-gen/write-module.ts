@@ -49,5 +49,5 @@ export const Api${capitalize(m)} = {`
     map += source
 
   })
-  fs.writeFileSync(path.resolve(`./out/actions.ts`), map)
+  fs.writeFileSync(path.resolve(`./out/gen.ts`), map)
 }
