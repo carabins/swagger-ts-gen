@@ -1,54 +1,52 @@
+import {Action, capitalize} from "./Action";
+import {parseType, refToName} from "./write-definitions";
+
 const fs = require("fs")
 const path = require("path")
 
-export const writeModules = modules => Object.keys(modules).forEach(m => {
-  let filename = m.toLowerCase() + ".ts"
-  console.log(filename)
-  let source = `
-/// <reference path="./definitions.d.ts" />
-import {run} from './../run'
-
-export const Api${m} = {`
-  Object.keys(modules[m]).forEach(a => {
-    let action = modules[m][a]
-
-
-    const getArguments = () => {
-      if (action.params)
-        return action.params.map(p =>
-          `${p.name}${p.required ? '?' : ''}:${p.type}`
-        )
-      else return ''
-    }
-    const getWhere = () => {
-      let where = ''
-      if (action.params) {
-        let w = action.params.map(p => p.in)
-        where = `where: "${w[0]}"`
+export const writeModules = (modules, definitions) => {
+  let map = ` 
+${definitions}
+  `
+  Object.keys(modules).forEach(m => {
+    let actions:Action[] = modules[m]
+    let source = `
+export const Api${capitalize(m)} = {`
+    actions.forEach(action => {
+      const getArguments = () => {
+        let path:any[] = []
+        if (action.pathParams)
+          path = action.pathParams.map(p =>
+              `${p.name}:${parseType(p)}`
+          )
+        let body:any[] = []
+        if (action.bodyParams)
+          body = action.bodyParams.map(p =>
+              `${p.name}${p.required ? '' : '?'}:${parseType(p.schema)}`
+          )
+        let query:any[] = []
+        if (action.queryParams){
+          query = action.queryParams.map(p =>
+            `${p.name}?:${parseType(p)}`
+          )
+        }
+        return path.concat(body).concat(query)
       }
-      return where
-    }
-    const getArgs = () => {
-      let arg = ''
-      if (action.params) {
-        let a = action.params.map(p =>
-          `${p.name}`
-        )
-        arg = `arg:{${a}}`
-      }
-      return arg.length > 2 ? arg + "," : arg
-    }
-    const getOptions = () => `{
-        method: "${action.method.toUpperCase()}",
-        path: "${m}/${a}",
-        ${getArgs()}
-        ${getWhere()}           
-      }`
+      const getName = v=>v.name
+      const getOptions = () => `{
+          method: "${action.method.toUpperCase()}", ${action.bodyParams?'body,':''}
+          path: "${action.path}",
+          queryParams:{${action.queryParams.map(getName).join(',')}},          
+          pathParams:{${action.pathParams.map(getName).join(',')}},                    
+        }`
+      source += `
+    ${action.name}:(${getArguments()}) => 
+     run(${getOptions()}) as Promise<${action.responseType}>,`
+    })
     source += `
-    ${a}:(${getArguments()}) => 
-      run(${getOptions()}),`
-  })
-  source += `
 }`
-  fs.writeFileSync(path.resolve(`./apilib/gen/${filename}`), source)
-})
+    map += source
+
+  })
+  fs.writeFileSync(path.resolve(`./out/actions.ts`), map)
+}
