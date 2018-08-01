@@ -1,7 +1,21 @@
 import {writeFile, writeFileSync} from "fs";
 
 export const refToName = v => v.split("/").pop() as string
-
+export const parseType = v => {
+  if (v['$ref']) {
+    return refToName(v['$ref'])
+  }
+  if (v.type) {
+    switch (v.type) {
+      case "integer":
+        return "number"
+      case "array" :
+        return `${parseType(v.items)}[]`
+      default :
+        return v.type
+    }
+  }
+}
 export const writeDefinitions = definitions => {
   console.log("definitions")
   let source = ''
@@ -48,17 +62,8 @@ export type ${name} = number[]`
       if (v.properties) {
         let p = Object.keys(v.properties).map(c => {
           let prop = v.properties[c]
-          let type = prop.type
-          if (type) {
-            type = type == "integer" ? "number" : type
-            type = type == "array" ? "any[]" : type
-          } else {
-            if (prop['$ref']) {
-              type = refToName(prop['$ref'])
-            } else {
-              throw "need to parse type"
-            }
-          }
+          let type
+          type = parseType(prop)
           return c + ":" + type
         })
         source += `
@@ -77,5 +82,5 @@ export interface ${name} ${ext ? 'extends '+ext.join(","):''} {
   })
   // console.log(source)
 
-  writeFileSync("./out/definitions.d.ts", source)
+  return source
 }
