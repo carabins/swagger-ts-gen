@@ -8,11 +8,13 @@ export const writeModules = (modules, definitions) => {
   let map = ` 
 import {rq} from "./api";  
 ${definitions}
+
+export const gen = {
   `
   Object.keys(modules).forEach(m => {
     let actions: Action[] = modules[m]
-    let source = `
-export const Api${capitalize(m)} = {`
+
+    let source = `\n\t${m} : {`
     actions.forEach(action => {
 
       let pathParams: any[] = []
@@ -45,17 +47,17 @@ export const Api${capitalize(m)} = {`
       if (action.pathParams.length){
         optsParam +=`pathParams:{${action.pathParams.map(getName).join(",")}},`
       }
-      const getOptions = () => `"${action.path}", "${action.method.toUpperCase()}",{${optsParam}}`
+      const getOptions = () => `"${action.path}", "${action.method.toUpperCase()}",
+      {${optsParam}}`
       source += `
     ${action.name}:(${args.join(',')}) => 
      rq(${getOptions()}
-     ) as Promise<${action.responseType}>, 
+     ) as Promise<${action.responseType}>,
 `
     })
-    source += `
-}`
+    source += "\n},"
     map += source
-
   })
+  map += "}"
   fs.writeFileSync(path.resolve(`./out/gen.ts`), map)
 }

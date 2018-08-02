@@ -1,3 +1,5 @@
+import {gen} from "./gen";
+
 let baseURL = ""
 let headers = {
   'Content-Type': 'application/json-patch+json',
@@ -12,7 +14,8 @@ export const api = {
     if (accessToken) {
       headers['Authorization'] = accessToken
     }
-  }
+  },
+  gen
 }
 
 export const rq = (path: string, method: string, params) => {

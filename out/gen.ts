@@ -145,194 +145,238 @@ export interface InvalidFileTokenResponse  {
 	title:string,
 	type:string
 }
+
+export const gen = {
   
-export const ApiAuth = {
+	auth : {
     checkAuth:() => 
-     rq("/auth", "GET",{}
-     ) as Promise<any>, 
+     rq("/auth", "GET",
+      {}
+     ) as Promise<any>,
 
     login:(body:Credentials) => 
-     rq("/auth", "POST",{body,}
-     ) as Promise<JWT>, 
+     rq("/auth", "POST",
+      {body,}
+     ) as Promise<JWT>,
 
-}
-export const ApiApi = {
+},
+	api : {
     information:() => 
-     rq("/api", "GET",{}
-     ) as Promise<object>, 
+     rq("/api", "GET",
+      {}
+     ) as Promise<object>,
 
-}
-export const ApiIntent = {
+},
+	intent : {
     getIntents:(query?:{withoutTemplate?:boolean,operator?:boolean,rewindToTokenId?:number,limit?:number,offset?:number}) => 
-     rq("/intent", "GET",{query,}
-     ) as Promise<object>, 
+     rq("/intent", "GET",
+      {query,}
+     ) as Promise<object>,
 
-}
-export const ApiToken = {
+},
+	token : {
     getTokensByChain:(chain:number[],query?:{length?:number,limit?:number,offset?:number,rewindToTokenId?:number}) => 
-     rq("/token/chain/{chain}", "GET",{query,pathParams:{chain},}
-     ) as Promise<object>, 
+     rq("/token/chain/{chain}", "GET",
+      {query,pathParams:{chain},}
+     ) as Promise<object>,
 
     searchTokens:(query?:{text?:string,limit?:number,offset?:number}) => 
-     rq("/token/search", "GET",{query,}
-     ) as Promise<object>, 
+     rq("/token/search", "GET",
+      {query,}
+     ) as Promise<object>,
 
     getTokenCluster:(id:number,query?:{limit?:number,offset?:number}) => 
-     rq("/token/{id}/cluster", "GET",{query,pathParams:{id},}
-     ) as Promise<object>, 
+     rq("/token/{id}/cluster", "GET",
+      {query,pathParams:{id},}
+     ) as Promise<object>,
 
     searchTokensForMerge:(id:number,query?:{text?:string,threshold?:number,chain?:number[],limit?:number,offset?:number}) => 
-     rq("/token/{id}/merge", "GET",{query,pathParams:{id},}
-     ) as Promise<object>, 
+     rq("/token/{id}/merge", "GET",
+      {query,pathParams:{id},}
+     ) as Promise<object>,
 
     mergeTokens:(id:number,body:MergeTokens) => 
-     rq("/token/{id}/merge", "POST",{body,pathParams:{id},}
-     ) as Promise<Token>, 
+     rq("/token/{id}/merge", "POST",
+      {body,pathParams:{id},}
+     ) as Promise<Token>,
 
     updateToken:(id:number,body:Token) => 
-     rq("/token/{id}", "PUT",{body,pathParams:{id},}
-     ) as Promise<Token>, 
+     rq("/token/{id}", "PUT",
+      {body,pathParams:{id},}
+     ) as Promise<Token>,
 
-}
-export const ApiTemplate = {
+},
+	template : {
     getTemplates:(query?:{placeholder?:string,text?:string,limit?:number,offset?:number}) => 
-     rq("/template", "GET",{query,}
-     ) as Promise<object>, 
+     rq("/template", "GET",
+      {query,}
+     ) as Promise<object>,
 
     createTemplate:(body:SourceTemplate) => 
-     rq("/template", "POST",{body,}
-     ) as Promise<Template>, 
+     rq("/template", "POST",
+      {body,}
+     ) as Promise<Template>,
 
     exportTemplates:(query?:{token?:string,format?:string}) => 
-     rq("/template/export", "GET",{query,}
-     ) as Promise<any>, 
+     rq("/template/export", "GET",
+      {query,}
+     ) as Promise<any>,
 
     getSimilar:(id:number,query?:{sample?:string}) => 
-     rq("/template/{id}/similarity", "GET",{query,pathParams:{id},}
-     ) as Promise<object[]>, 
+     rq("/template/{id}/similarity", "GET",
+      {query,pathParams:{id},}
+     ) as Promise<object[]>,
 
     getTemplate:(id:number) => 
-     rq("/template/{id}", "GET",{pathParams:{id},}
-     ) as Promise<Template>, 
+     rq("/template/{id}", "GET",
+      {pathParams:{id},}
+     ) as Promise<Template>,
 
     updateTemplate:(id:number,body:PartialTemplate) => 
-     rq("/template/{id}", "PATCH",{body,pathParams:{id},}
-     ) as Promise<Template>, 
+     rq("/template/{id}", "PATCH",
+      {body,pathParams:{id},}
+     ) as Promise<Template>,
 
     deleteTemplate:(id:number) => 
-     rq("/template/{id}", "DELETE",{pathParams:{id},}
-     ) as Promise<any>, 
+     rq("/template/{id}", "DELETE",
+      {pathParams:{id},}
+     ) as Promise<any>,
 
     searchTokensForMergeToTemplate:(id:number,query?:{text?:string,threshold?:number,limit?:number,offset?:number}) => 
-     rq("/template/{id}/merge", "GET",{query,pathParams:{id},}
-     ) as Promise<object>, 
+     rq("/template/{id}/merge", "GET",
+      {query,pathParams:{id},}
+     ) as Promise<object>,
 
     mergeTokensToTemplate:(id:number,body:MergeTokens) => 
-     rq("/template/{id}/merge", "POST",{body,pathParams:{id},}
-     ) as Promise<Template>, 
+     rq("/template/{id}/merge", "POST",
+      {body,pathParams:{id},}
+     ) as Promise<Template>,
 
     addQuestion:(id:number,body:PartialTemplateMessage) => 
-     rq("/template/{id}/sample", "POST",{body,pathParams:{id},}
-     ) as Promise<TemplateMessage>, 
+     rq("/template/{id}/sample", "POST",
+      {body,pathParams:{id},}
+     ) as Promise<TemplateMessage>,
 
     getQuestions:(id:number,query?:{limit?:number,offset?:number}) => 
-     rq("/template/{id}/sample", "GET",{query,pathParams:{id},}
-     ) as Promise<object>, 
+     rq("/template/{id}/sample", "GET",
+      {query,pathParams:{id},}
+     ) as Promise<object>,
 
     addAnswer:(id:number,body:PartialTemplateMessage) => 
-     rq("/template/{id}/answer", "POST",{body,pathParams:{id},}
-     ) as Promise<TemplateMessage>, 
+     rq("/template/{id}/answer", "POST",
+      {body,pathParams:{id},}
+     ) as Promise<TemplateMessage>,
 
     getAnswers:(id:number,query?:{limit?:number,offset?:number}) => 
-     rq("/template/{id}/answer", "GET",{query,pathParams:{id},}
-     ) as Promise<object>, 
+     rq("/template/{id}/answer", "GET",
+      {query,pathParams:{id},}
+     ) as Promise<object>,
 
     getAnswerTips:(id:number) => 
-     rq("/template/{id}/answer/tips", "GET",{pathParams:{id},}
-     ) as Promise<string[]>, 
+     rq("/template/{id}/answer/tips", "GET",
+      {pathParams:{id},}
+     ) as Promise<string[]>,
 
     getRule:(id:number) => 
-     rq("/template/{id}/rule", "GET",{pathParams:{id},}
-     ) as Promise<TemplateRule>, 
+     rq("/template/{id}/rule", "GET",
+      {pathParams:{id},}
+     ) as Promise<TemplateRule>,
 
     createOrUpdateRule:(id:number,body:TemplateRule) => 
-     rq("/template/{id}/rule", "PUT",{body,pathParams:{id},}
-     ) as Promise<TemplateRule>, 
+     rq("/template/{id}/rule", "PUT",
+      {body,pathParams:{id},}
+     ) as Promise<TemplateRule>,
 
     deleteRule:(id:number) => 
-     rq("/template/{id}/rule", "DELETE",{pathParams:{id},}
-     ) as Promise<any>, 
+     rq("/template/{id}/rule", "DELETE",
+      {pathParams:{id},}
+     ) as Promise<any>,
 
-}
-export const ApiSample = {
+},
+	sample : {
     updateQuestion:(id:number,body:TemplateMessage) => 
-     rq("/sample/{id}", "PUT",{body,pathParams:{id},}
-     ) as Promise<TemplateMessage>, 
+     rq("/sample/{id}", "PUT",
+      {body,pathParams:{id},}
+     ) as Promise<TemplateMessage>,
 
     deleteQuestion:(id:number) => 
-     rq("/sample/{id}", "DELETE",{pathParams:{id},}
-     ) as Promise<any>, 
+     rq("/sample/{id}", "DELETE",
+      {pathParams:{id},}
+     ) as Promise<any>,
 
-}
-export const ApiAnswer = {
+},
+	answer : {
     updateAnswer:(id:number,body:TemplateMessage) => 
-     rq("/answer/{id}", "PUT",{body,pathParams:{id},}
-     ) as Promise<TemplateMessage>, 
+     rq("/answer/{id}", "PUT",
+      {body,pathParams:{id},}
+     ) as Promise<TemplateMessage>,
 
     deleteAnswer:(id:number) => 
-     rq("/answer/{id}", "DELETE",{pathParams:{id},}
-     ) as Promise<any>, 
+     rq("/answer/{id}", "DELETE",
+      {pathParams:{id},}
+     ) as Promise<any>,
 
-}
-export const ApiBot = {
+},
+	bot : {
     getTips:(query?:{templates?:number[],limit?:number}) => 
-     rq("/bot/tips", "GET",{query,}
-     ) as Promise<TipQuestion[]>, 
+     rq("/bot/tips", "GET",
+      {query,}
+     ) as Promise<TipQuestion[]>,
 
     sendQuestion:(body:Question) => 
-     rq("/bot/question", "POST",{body,}
-     ) as Promise<object>, 
+     rq("/bot/question", "POST",
+      {body,}
+     ) as Promise<object>,
 
     sendAnswer:(body:Answer) => 
-     rq("/bot/answer", "POST",{body,}
-     ) as Promise<any>, 
+     rq("/bot/answer", "POST",
+      {body,}
+     ) as Promise<any>,
 
     sendReport:(body:Report) => 
-     rq("/bot/report", "POST",{body,}
-     ) as Promise<any>, 
+     rq("/bot/report", "POST",
+      {body,}
+     ) as Promise<any>,
 
     getReports:(query?:{date_from?:string}) => 
-     rq("/bot/report", "GET",{query,}
-     ) as Promise<any>, 
+     rq("/bot/report", "GET",
+      {query,}
+     ) as Promise<any>,
 
-}
-export const ApiTest = {
+},
+	test : {
     testTemplates:(query?:{public?:boolean}) => 
-     rq("/test/templates", "GET",{query,}
-     ) as Promise<TemplateTestResult[]>, 
+     rq("/test/templates", "GET",
+      {query,}
+     ) as Promise<TemplateTestResult[]>,
 
-}
-export const ApiFile = {
+},
+	file : {
     getDownloadToken:() => 
-     rq("/file/token", "GET",{}
-     ) as Promise<object>, 
+     rq("/file/token", "GET",
+      {}
+     ) as Promise<object>,
 
-}
-export const ApiPlaceholder = {
+},
+	placeholder : {
     getPlaceholders:(query?:{limit?:number,offset?:number}) => 
-     rq("/placeholder", "GET",{query,}
-     ) as Promise<object>, 
+     rq("/placeholder", "GET",
+      {query,}
+     ) as Promise<object>,
 
     createPlaceholder:(body:PartialPlaceholder) => 
-     rq("/placeholder", "POST",{body,}
-     ) as Promise<Placeholder>, 
+     rq("/placeholder", "POST",
+      {body,}
+     ) as Promise<Placeholder>,
 
     updatePlaceholder:(id:number,body:Placeholder) => 
-     rq("/placeholder/{id}", "PUT",{body,pathParams:{id},}
-     ) as Promise<Placeholder>, 
+     rq("/placeholder/{id}", "PUT",
+      {body,pathParams:{id},}
+     ) as Promise<Placeholder>,
 
     deletePlaceholder:(id:number) => 
-     rq("/placeholder/{id}", "DELETE",{pathParams:{id},}
-     ) as Promise<any>, 
+     rq("/placeholder/{id}", "DELETE",
+      {pathParams:{id},}
+     ) as Promise<any>,
 
-}
+},}
