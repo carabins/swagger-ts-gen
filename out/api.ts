@@ -1,22 +1,21 @@
-const baseURL = ""
+let baseURL = ""
 let headers = {
   'Content-Type': 'application/json-patch+json',
   'accept': 'text/plain'
 }
-export const initApiInstance = (accessToken?) => {
-  if (accessToken) {
-    headers['Authorization'] = accessToken
-    // ws.connect(baseURL, accessToken)
+
+export const api = {
+  setBaseUrl(url) {
+    baseURL = url
+  },
+  updateAuthorization(accessToken) {
+    if (accessToken) {
+      headers['Authorization'] = accessToken
+    }
   }
 }
 
-export const rq = (params: {
-  method: string,
-  path: string,
-  queryParams: any,
-  body?: any,
-  pathParams: any,
-}) => {
+export const rq = (path: string, method: string, params) => {
   let url = params.path
   if (params.pathParams) {
     Object.keys(params.pathParams).forEach(key => {
@@ -29,6 +28,7 @@ export const rq = (params: {
       url += key + `=${params.queryParams[key]}&`
     })
   }
+  url = baseURL + url
   return new Promise((resolve, reject) => fetch(url,
     {
       headers,

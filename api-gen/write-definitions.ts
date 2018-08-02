@@ -7,6 +7,8 @@ export const parseType = v => {
   }
   if (v.type) {
     switch (v.type) {
+      case "file":
+        return "any"
       case "integer":
         return "number"
       case "array" :
